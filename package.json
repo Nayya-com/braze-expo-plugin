@@ -1,0 +1,8 @@
+{
+  "name": "braze-expo-plugin",
+  "version": "0.1.0",
+  "description": "Expo config plugin for the Braze React Native SDK",
+  "main": "index.js",
+  "author": "Nayya",
+  "license": "MIT"
+}
