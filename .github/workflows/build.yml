@@ -30,6 +30,9 @@ jobs:
 
       - name: Push to builds
         run: |
+          git config --global user.email "team@nayya.com"
+          git config --global user.name "Nayya"
+
           git checkout builds
           git checkout builds-temp .gitignore
           git add .gitignore build
