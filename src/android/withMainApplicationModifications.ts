@@ -1,8 +1,4 @@
-import {
-  ConfigPlugin,
-  withMainApplication,
-  ExportedConfigWithProps,
-} from '@expo/config-plugins';
+import { ConfigPlugin, withMainApplication } from '@expo/config-plugins';
 
 export const withMainApplicationModifications: ConfigPlugin = (configOuter) => {
   const importRegex = /^import [a-zA-Z.]+;/m;
@@ -12,9 +8,14 @@ export const withMainApplicationModifications: ConfigPlugin = (configOuter) => {
   const addedCode =
     '    registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener());';
 
-  return withMainApplication(configOuter, (config: ExportedConfigWithProps) => {
-    let stringContents = config.modResults.contents;
-    const indexOfFirstImport = stringContents.match(importRegex).index;
+  return withMainApplication(configOuter, (config) => {
+    let stringContents: string = config.modResults.contents;
+    const match = stringContents.match(importRegex);
+
+    if (!match || match.index === undefined) {
+      throw new Error('Unable to match "import" in MainApplication');
+    }
+    const indexOfFirstImport = match.index;
 
     stringContents = [
       stringContents.slice(0, indexOfFirstImport),
