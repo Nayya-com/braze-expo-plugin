@@ -97,7 +97,7 @@ export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
     let stringContents = config.modResults.contents;
 
     const match = stringContents.match(importRegex);
-    if (!match || !match.index) {
+    if (!match || match.index === undefined) {
       throw new Error('Unable to match "#import" in AppDelegate.m');
     }
     const endOfMatchIndex = match.index + match[0].length;

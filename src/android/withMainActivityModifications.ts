@@ -41,7 +41,7 @@ export const withMainActivityModifications: ConfigPlugin = (configOuter) => {
       let stringContents = config.modResults.contents;
 
       const match = stringContents.match(onNewIntentRegex);
-      if (!match || !match.index) {
+      if (!match || match.index === undefined) {
         throw new Error('Unable to match "void onNewIntent" in MainActivity');
       }
       const fullMatch = match[1];
