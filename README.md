@@ -58,8 +58,14 @@ For local builds, define these vars in your local environment before building (c
 For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/build-reference/variables/#secrets-on-the-expo-website) and then run the `eas build` command.
 
 ## TODO
-Add support for additional customization:
-- Back stack behavior (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationcustomizing-back-stack-behavior)
-- Notification channels (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationstep-5-define-notification-channels)
-- Custom notification display (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationcustom-displaying-notifications)
-- Custom handling for push receipts, opens, dismissals, and key-value pairs (https://www.braze.com/docs/developer_guide/platform_integration_guides/androidush_notifications/android/integration/standard_integration/#custom-handling-for-push-receipts-opens-dismissals-and-key-value-pairs)
+
+#### High priority
+- Add support for icons for Android
+- Add support for images on iOS
+
+#### Low priority
+- Add support for additional customization:
+  - Back stack behavior (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationcustomizing-back-stack-behavior)
+  - Notification channels (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationstep-5-define-notification-channels)
+  - Custom notification display (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationcustom-displaying-notifications)
+  - Custom handling for push receipts, opens, dismissals, and key-value pairs (https://www.braze.com/docs/developer_guide/platform_integration_guides/androidush_notifications/android/integration/standard_integration/#custom-handling-for-push-receipts-opens-dismissals-and-key-value-pairs)
