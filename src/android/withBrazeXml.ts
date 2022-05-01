@@ -8,19 +8,47 @@ import {
 import { ExpoConfig } from '@expo/config-types';
 import fs from 'fs';
 
-// TODO: store the image files and return the asset path
-const generateImageAsset = (localPath: string): string => {
-  return localPath; // TODO
+import {
+  generateNotificationIconImageFiles,
+  notificationIconResource,
+} from '../helpers/notificationIcon';
+
+// // TODO: store the image files and return the asset path
+const generateFilesAndReturnResource = async (
+  iconPath: string | undefined,
+  projectRoot: string,
+  suffix: string,
+) => {
+  if (!iconPath) return undefined;
+
+  await generateNotificationIconImageFiles(iconPath, projectRoot, suffix);
+
+  return notificationIconResource(suffix);
 };
 
-const generateBrazeXmlContents = ({
-  androidSdkApiKey,
-  androidSdkEndpoint,
-  firebaseCloudMessagingSenderId,
-  smallNotificationIcon,
-  largeNotificationIcon,
-  iconBackgroundColor,
-}: ConfigProps) => {
+const generateBrazeXmlContents = async (
+  {
+    androidSdkApiKey,
+    androidSdkEndpoint,
+    firebaseCloudMessagingSenderId,
+    smallNotificationIcon,
+    largeNotificationIcon,
+    iconBackgroundColor,
+  }: ConfigProps,
+  projectRoot: string,
+) => {
+  const smallIconResource = await generateFilesAndReturnResource(
+    smallNotificationIcon,
+    projectRoot,
+    'small',
+  );
+
+  const largeIconResource = await generateFilesAndReturnResource(
+    largeNotificationIcon,
+    projectRoot,
+    'large',
+  );
+
   return `
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -30,17 +58,13 @@ const generateBrazeXmlContents = ({
 <string translatable="false" name="com_braze_firebase_cloud_messaging_sender_id">${firebaseCloudMessagingSenderId}</string>
 <bool name="com_braze_handle_push_deep_links_automatically">true</bool>
 ${
-  smallNotificationIcon
-    ? `<drawable name="com_braze_push_small_notification_icon">${generateImageAsset(
-        smallNotificationIcon,
-      )}</drawable>`
+  smallIconResource
+    ? `<drawable name="com_braze_push_small_notification_icon">${smallIconResource}</drawable>`
     : ''
 }
 ${
-  largeNotificationIcon
-    ? `<drawable name="com_braze_push_small_notification_icon">${generateImageAsset(
-        largeNotificationIcon,
-      )}</drawable>`
+  largeIconResource
+    ? `<drawable name="com_braze_push_large_notification_icon">${largeIconResource}</drawable>`
     : ''
 }
 ${
@@ -77,8 +101,11 @@ export const withBrazeXmlBaseMod: ConfigPlugin<ConfigProps> = (
         },
 
         // Write braze.xml to the filesystem.
-        async write(filePath: string) {
-          const brazeXmlContents = generateBrazeXmlContents(props);
+        async write(filePath: string, { modRequest: { projectRoot } }) {
+          const brazeXmlContents = await generateBrazeXmlContents(
+            props,
+            projectRoot,
+          );
 
           await fs.promises.writeFile(filePath, brazeXmlContents);
         },
