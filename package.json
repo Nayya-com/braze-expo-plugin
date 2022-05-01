@@ -12,7 +12,10 @@
   "scripts": {
     "expo-module": "expo-module",
     "lint": "eslint .",
-    "typecheck": "npx --no-install tsc --noEmit"
+    "typecheck": "npx --no-install tsc --noEmit",
+    "build": "EXPO_NONINTERACTIVE=true expo-module build plugin",
+    "clean": "expo-module clean plugin",
+    "prepare": "expo-module prepare plugin"
   },
   "devDependencies": {
     "@expo/config-plugins": "^4.1.4",
