@@ -10,15 +10,13 @@
   "author": "Nayya",
   "license": "MIT",
   "scripts": {
-    "build": "EXPO_NONINTERACTIVE=true expo-module build",
-    "build:watch": "expo-module build",
-    "clean": "expo-module clean",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf build",
     "expo-module": "expo-module",
     "lint": "eslint .",
     "prepare": "yarn clean && yarn build",
-    "prepublishOnly": "expo-module prepublishOnly",
-    "test": "expo-module test",
-    "tc": "npx --no-install tsc --noEmit"
+    "tc": "tsc --noEmit"
   },
   "devDependencies": {
     "@expo/config-plugins": "^4.1.4",
