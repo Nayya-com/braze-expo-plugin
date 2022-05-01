@@ -38,7 +38,7 @@ export const withAddedFirebaseMessagingDependency: ConfigPlugin<ConfigProps> = (
      * But, if the Expo SDK is <45, we still need to add the firebase-iid dependency (see https://github.com/expo/expo/pull/15010#issuecomment-1018242147).
      */
 
-    const dependenciesBlockRegex = /(dependencies\s*\{\s*)/;
+    const dependenciesBlockRegex = /(dependencies\s*\{[^\S\r\n]*)/;
 
     config.modResults.contents = config.modResults.contents.replace(
       dependenciesBlockRegex,

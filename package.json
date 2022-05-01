@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "build": "EXPO_NONINTERACTIVE=true expo-module build",
+    "build:watch": "expo-module build",
     "clean": "expo-module clean",
     "expo-module": "expo-module",
     "lint": "eslint .",
