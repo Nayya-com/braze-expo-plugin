@@ -21,12 +21,18 @@ const defaultProps = {
 export const guardProps = (props: Partial<ConfigProps>): ConfigProps =>
   Object.fromEntries(
     (Object.entries(props) as [keyof ConfigProps, unknown][]).map(
-      ([name, value]) => {
-        // When running an EAS build, throw if any vars are missing:
-        if (value === undefined && process.env.EAS_BUILD) {
-          throw new Error(
-            `Missing prop -- ${name} must be provided in app.config.js!`,
-          );
+      ([name, providedValue]) => {
+        let value = providedValue;
+        if (value === undefined) {
+          if (process.env.EAS_BUILD) {
+            // When running an EAS build, throw if any vars are missing:
+            throw new Error(
+              `Missing prop -- ${name} must be provided in app.config.js!`,
+            );
+          } else {
+            // If not an EAS build (e.g. `expo prebuild`), we can use default values
+            value = defaultProps[name];
+          }
         }
 
         // Throw if any vars have incorrect type:
@@ -37,8 +43,7 @@ export const guardProps = (props: Partial<ConfigProps>): ConfigProps =>
           );
         }
 
-        // If not an EAS build (e.g. `expo prebuild`), we can use default values:
-        return [name, value || defaultProps[name]];
+        return [name, value];
       },
     ),
   ) as ConfigProps;
