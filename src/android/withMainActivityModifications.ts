@@ -51,11 +51,12 @@ const addImport = (stringContents: string): string => {
 };
 
 const addToOnCreate = (stringContents: string): string => {
-  const onCreateRegex = /(void onCreate\(\)(.|\n)*super.onCreate\(\);\s*\n)/;
+  const onCreateRegex =
+    /(void onCreate\(.*\)(.|\n)*super.onCreate\(.*\);\s*\n)/;
 
   const match = stringContents.match(onCreateRegex);
   if (!match || match.index === undefined) {
-    throw new Error('Unable to match "void onNewIntent" in MainActivity');
+    throw new Error('Unable to match "void onCreate" in MainActivity');
   }
 
   const fullMatch = match[1];
@@ -63,7 +64,7 @@ const addToOnCreate = (stringContents: string): string => {
   const indexAfterMatch = indexOfMatch + fullMatch.length;
 
   const addedLine =
-    'registerActivityLifecycleCallbacks(new BrazeActivityLifecycleCallbackListener());';
+    '    registerActivityLifecycleCallbacks(new BrazeActivityLifecycleCallbackListener());';
 
   stringContents = [
     stringContents.slice(0, indexAfterMatch),
