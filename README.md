@@ -16,13 +16,17 @@ TODO: add release branches.
 ## Setup
 Add the plugin and its props to your `app.config.js`:
 ```javascript
-// app.config.js
+// Required props:
 const androidSdkApiKey = process.env.BRAZE_SDK_API_KEY_ANDROID;
 const androidSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_ANDROID;
 const iosSdkApiKey = process.env.BRAZE_SDK_API_KEY_IOS;
 const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
 const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
+
+// Optional props:
+const smallNotificationIcon = './assets/icons/notification-icon-small.png';
+const largeNotificationIcon = './assets/icons/notification-icon-large.png';
 
 export default {
   expo: {
@@ -39,6 +43,9 @@ export default {
           iosSdkEndpoint,
           firebaseCloudMessagingSenderId,
           firebaseBoMVersion,
+          smallNotificationIcon,
+          largeNotificationIcon,
+          iconBackgroundColor,
         }
       ],
     ],

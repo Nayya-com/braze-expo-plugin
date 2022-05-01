@@ -8,12 +8,20 @@ import {
 import { ExpoConfig } from '@expo/config-types';
 import fs from 'fs';
 
+// TODO: store the image files and return the asset path
+const generateImageAsset = (localPath: string): string => {
+  return localPath; // TODO
+};
+
 const generateBrazeXmlContents = ({
   androidSdkApiKey,
   androidSdkEndpoint,
   firebaseCloudMessagingSenderId,
-}: ConfigProps) =>
-  `
+  smallNotificationIcon,
+  largeNotificationIcon,
+  iconBackgroundColor,
+}: ConfigProps) => {
+  return `
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="com_braze_api_key">${androidSdkApiKey}</string>
@@ -21,15 +29,28 @@ const generateBrazeXmlContents = ({
 <bool translatable="false" name="com_braze_firebase_cloud_messaging_registration_enabled">true</bool>
 <string translatable="false" name="com_braze_firebase_cloud_messaging_sender_id">${firebaseCloudMessagingSenderId}</string>
 <bool name="com_braze_handle_push_deep_links_automatically">true</bool>
+${
+  smallNotificationIcon
+    ? `<drawable name="com_braze_push_small_notification_icon">${generateImageAsset(
+        smallNotificationIcon,
+      )}</drawable>`
+    : ''
+}
+${
+  largeNotificationIcon
+    ? `<drawable name="com_braze_push_small_notification_icon">${generateImageAsset(
+        largeNotificationIcon,
+      )}</drawable>`
+    : ''
+}
+${
+  iconBackgroundColor
+    ? `<integer name="com_braze_default_notification_accent_color">${iconBackgroundColor}</integer>`
+    : ''
+}
 </resources>
 `.trim();
-
-/*
- * TODO: add notification icon support (https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integration/#step-3-configure-notification-icons)
- *   <drawable name="com_braze_push_small_notification_icon">REPLACE_WITH_YOUR_ICON</drawable>
- *   <drawable name="com_braze_push_large_notification_icon">REPLACE_WITH_YOUR_ICON</drawable>
- *   <integer name="com_braze_default_notification_accent_color">0xFFf33e3e</integer>
- */
+};
 
 /**
  * A plugin which adds res/values/braze.xml

@@ -7,9 +7,10 @@ declare type ConfigProps = {
   firebaseBoMVersion: string;
   smallNotificationIcon?: string;
   largeNotificationIcon?: string;
+  iconBackgroundColor?: string;
 };
 
 type RequiredProps = keyof Omit<
   ConfigProps,
-  'smallNotificationIcon' | 'largeNotificationIcon'
+  'smallNotificationIcon' | 'largeNotificationIcon' | 'iconBackgroundColor'
 >;
