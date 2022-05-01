@@ -2,7 +2,7 @@
   "name": "braze-expo-plugin",
   "version": "0.1.0",
   "description": "Expo config plugin for the Braze React Native SDK",
-  "main": "./app.plugin.js",
+  "main": "app.plugin.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nayya-com/braze-expo-plugin.git"
@@ -10,14 +10,14 @@
   "author": "Nayya",
   "license": "MIT",
   "scripts": {
-    "build": "expo-module build",
+    "build": "EXPO_NONINTERACTIVE=true expo-module build",
     "clean": "expo-module clean",
     "expo-module": "expo-module",
     "lint": "eslint .",
-    "prepare": "expo-module prepare",
+    "prepare": "yarn clean && yarn build",
     "prepublishOnly": "expo-module prepublishOnly",
     "test": "expo-module test",
-    "typecheck": "npx --no-install tsc --noEmit"
+    "tc": "npx --no-install tsc --noEmit"
   },
   "devDependencies": {
     "@expo/config-plugins": "^4.1.4",
