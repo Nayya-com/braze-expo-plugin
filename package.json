@@ -2,7 +2,11 @@
   "name": "braze-expo-plugin",
   "version": "0.1.0",
   "description": "Expo config plugin for the Braze React Native SDK",
-  "main": "index.js",
+  "main": "./app.plugin.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nayya-com/braze-expo-plugin.git"
+  },
   "author": "Nayya",
   "license": "MIT",
   "scripts": {
