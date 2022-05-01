@@ -15,7 +15,6 @@
     "clean": "rm -rf build",
     "expo-module": "expo-module",
     "lint": "eslint .",
-    "prepare": "yarn clean && yarn build",
     "tc": "tsc --noEmit"
   },
   "devDependencies": {

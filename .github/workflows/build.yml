@@ -1,0 +1,37 @@
+name: Build and push to `builds` branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and Push
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Save builds branch in builds-temp & reset it
+        run: |
+          git fetch --all
+          git checkout builds
+          git checkout -b builds-temp
+          git checkout builds
+          git reset --hard main
+          git checkout main
+
+      - name: Install all dependencies
+        run: yarn
+
+      - name: Build
+        run: yarn clean && yarn build
+
+      - name: Push to builds
+        run: |
+          git checkout builds
+          git checkout builds-temp .gitignore
+          git add .gitignore build
+          git commit -m "new build"
+          git push --force
