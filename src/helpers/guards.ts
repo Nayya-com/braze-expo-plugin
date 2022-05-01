@@ -1,6 +1,6 @@
 import { ExpoConfig } from '@expo/config-types';
 
-const propTypes = {
+const requiredPropsTypes = {
   androidSdkApiKey: 'string',
   androidSdkEndpoint: 'string',
   iosSdkApiKey: 'string',
@@ -9,7 +9,7 @@ const propTypes = {
   firebaseBoMVersion: 'string',
 };
 
-const defaultProps = {
+const requiredPropsDefaultValues = {
   androidSdkApiKey: 'androidSdkApiKey_PLACEHOLDER',
   androidSdkEndpoint: 'androidSdkEndpoint_PLACEHOLDER',
   iosSdkApiKey: 'iosSdkApiKey_PLACEHOLDER',
@@ -20,32 +20,35 @@ const defaultProps = {
 
 export const guardProps = (props: Partial<ConfigProps>): ConfigProps =>
   Object.fromEntries(
-    (Object.entries(props) as [keyof ConfigProps, unknown][]).map(
-      ([name, providedValue]) => {
-        let value = providedValue;
-        if (value === undefined) {
-          if (process.env.EAS_BUILD) {
-            // When running an EAS build, throw if any vars are missing:
-            throw new Error(
-              `Missing prop -- ${name} must be provided in app.config.js!`,
-            );
-          } else {
-            // If not an EAS build (e.g. `expo prebuild`), we can use default values
-            value = defaultProps[name];
-          }
-        }
+    Object.entries(props).map(([propName, providedValue]) => {
+      const name = propName as RequiredProps;
 
-        // Throw if any vars have incorrect type:
-        const propType = propTypes[name];
-        if (typeof value !== propType) {
+      if (!(name in requiredPropsTypes)) return [propName, providedValue];
+
+      let value = providedValue;
+
+      if (value === undefined) {
+        if (process.env.EAS_BUILD) {
+          // When running an EAS build, throw if any vars are missing:
           throw new Error(
-            `Incorrect type for prop -- ${name} should be a ${propType}`,
+            `Missing prop -- ${name} must be provided in app.config.js!`,
           );
+        } else {
+          // If not an EAS build (e.g. `expo prebuild`), we can use default values
+          value = requiredPropsDefaultValues[name];
         }
+      }
 
-        return [name, value];
-      },
-    ),
+      // Throw if any vars have incorrect type:
+      const propType = requiredPropsTypes[name];
+      if (typeof value !== propType) {
+        throw new Error(
+          `Incorrect type for prop -- ${name} should be a ${propType}`,
+        );
+      }
+
+      return [name, value];
+    }),
   ) as ConfigProps;
 
 export const guardConfig = (config: ExpoConfig): void => {

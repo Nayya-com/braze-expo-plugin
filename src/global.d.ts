@@ -5,4 +5,11 @@ declare type ConfigProps = {
   iosSdkEndpoint: string;
   firebaseCloudMessagingSenderId: string;
   firebaseBoMVersion: string;
+  smallNotificationIcon?: string;
+  largeNotificationIcon?: string;
 };
+
+type RequiredProps = keyof Omit<
+  ConfigProps,
+  'smallNotificationIcon' | 'largeNotificationIcon'
+>;
