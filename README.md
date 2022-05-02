@@ -8,10 +8,10 @@ The [#119](https://github.com/Appboy/appboy-react-sdk/issues/119) issue in the B
 
 ## Installation
 ```
-yarn add https://github.com/Nayya-com/braze-expo-plugin.git
+yarn add https://github.com/Nayya-com/braze-expo-plugin.git#builds
 ```
 
-TODO: add release branches.
+TODO: publish versioned package to npmjs.
 
 ## Setup
 Add the plugin and its props to your `app.config.js`:
@@ -73,7 +73,7 @@ For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/
 
 #### High priority
 - [X] Add support for icons for Android
-- [ ] Add support for images on iOS
+- [X] Add support for images on iOS
 
 #### Low priority
 - Add support for additional customization:
