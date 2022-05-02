@@ -33,11 +33,6 @@ export const withAddedFirebaseMessagingDependency: ConfigPlugin<ConfigProps> = (
     .join('\n');
 
   return withAppBuildGradle(configOuter, (config) => {
-    /*
-     * NOTE: when using expo-notifications, we skip adding firebase dependencies, since expo-notification already includes the firebase dependencies.
-     * But, if the Expo SDK is <45, we still need to add the firebase-iid dependency (see https://github.com/expo/expo/pull/15010#issuecomment-1018242147).
-     */
-
     const dependenciesBlockRegex = /(dependencies\s*\{[^\S\r\n]*)/;
 
     config.modResults.contents = config.modResults.contents.replace(

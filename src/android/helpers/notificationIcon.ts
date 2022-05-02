@@ -1,4 +1,7 @@
-// NOTE: this code is mostly taken from expo-notifications
+/*
+ * NOTE: most of this code is based on the expo-notifications config plugin
+ * https://github.com/expo/expo/tree/master/packages/expo-notifications
+ */
 
 import { generateImageAsync } from '@expo/image-utils';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';

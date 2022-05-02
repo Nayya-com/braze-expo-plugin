@@ -75,7 +75,6 @@ const didRegisterForRemoteNotificationsWithDeviceTokenBrazeHandler = `
   [[Appboy sharedInstance] registerDeviceToken:deviceToken];
 }`;
 
-// If usingExpoNotifications = true, include the expo handlers. Otherwise, include the Braze handlers:
 const brazeCodeSnippets = [
   didReceiveRemoteNotificationBrazeHandler,
   didReceiveNotificationResponseBrazeHandler,

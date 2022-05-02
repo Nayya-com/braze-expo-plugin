@@ -1,34 +1,6 @@
-import {
-  ConfigPlugin,
-  ExportedConfigWithProps,
-  AndroidConfig,
-  withMainActivity,
-} from '@expo/config-plugins';
-import path from 'path';
+import { ConfigPlugin, withMainActivity } from '@expo/config-plugins';
 
-const { getMainActivityOrThrow, readAndroidManifestAsync } =
-  AndroidConfig.Manifest;
-
-/*
- * NOTE: normally we'd use withAndroidManifest to read the manifest, but we
- * can't easily combine that with the withMainActivity call we're using below,
- * so we're manually reading the manifest instead.
- */
-const getLaunchMode = async (config: ExportedConfigWithProps) => {
-  const {
-    modRequest: { platformProjectRoot },
-  } = config;
-
-  const filePath = path.join(
-    platformProjectRoot,
-    'app/src/main/AndroidManifest.xml',
-  );
-  const androidManifest = await readAndroidManifestAsync(filePath);
-  const mainActivity = getMainActivityOrThrow(androidManifest);
-  const launchMode = mainActivity.$['android:launchMode'];
-
-  return launchMode;
-};
+import { getLaunchMode } from './helpers/launchMode';
 
 const addImport = (stringContents: string): string => {
   const importRegex = /^import [a-zA-Z.]+;/m;

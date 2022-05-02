@@ -11,7 +11,7 @@ import fs from 'fs';
 import {
   generateNotificationIconImageFiles,
   notificationIconResource,
-} from '../helpers/notificationIcon';
+} from './helpers/notificationIcon';
 
 const generateFilesAndReturnResource = async (
   iconPath: string | undefined,
