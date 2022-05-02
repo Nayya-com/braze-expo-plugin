@@ -111,7 +111,7 @@ ${
 };
 
 /**
- * A plugin which adds res/values/braze.xml
+ * A helper which adds the brazeXml mod
  */
 export const withBrazeXmlBaseMod: ConfigPlugin<ConfigProps> = (
   config,
@@ -149,9 +149,9 @@ export const withBrazeXmlBaseMod: ConfigPlugin<ConfigProps> = (
 };
 
 /**
- * (Utility) Provides the Braze XML file
+ * (Utility) Wraps the brazeXml base mod
  */
-const withBrazeXmlMod = (config: ExpoConfig, action: Mod<unknown>) => {
+const withBrazeXmlMod = (config: ExpoConfig, action: Mod) => {
   return withMod(config, {
     platform: 'android',
     mod: 'brazeXml',
@@ -160,7 +160,7 @@ const withBrazeXmlMod = (config: ExpoConfig, action: Mod<unknown>) => {
 };
 
 /*
- * Wrapper
+ * Mod to execute the brazeXml base mod
  */
 export const withBrazeXml: ConfigPlugin = (configOuter) =>
-  withBrazeXmlMod(configOuter, (action) => action);
+  withBrazeXmlMod(configOuter, (config) => config);
