@@ -158,8 +158,9 @@ const addNotificationServiceExtension = async (options: Options) => {
       }
     }
 
-    // Add development team to the target
+    // Add development team to the target & the main
     xcodeProject.addTargetAttribute('DevelopmentTeam', appleTeamId, nseTarget);
+    xcodeProject.addTargetAttribute('DevelopmentTeam', appleTeamId);
 
     fs.writeFileSync(projPath, xcodeProject.writeSync());
   });
