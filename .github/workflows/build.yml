@@ -11,7 +11,9 @@ jobs:
     name: Build and Push
     steps:
       - name: git-checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check out builds branch, merge main
         run: |
