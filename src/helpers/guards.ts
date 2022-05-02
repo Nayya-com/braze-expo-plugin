@@ -1,6 +1,6 @@
 import { ExpoConfig } from '@expo/config-types';
 
-const requiredPropsTypes = {
+const requiredPropsTypes: Record<RequiredProps, string> = {
   androidSdkApiKey: 'string',
   androidSdkEndpoint: 'string',
   iosSdkApiKey: 'string',
@@ -9,7 +9,7 @@ const requiredPropsTypes = {
   firebaseBoMVersion: 'string',
 };
 
-const requiredPropsDefaultValues = {
+const requiredPropsDefaultValues: Pick<ConfigProps, RequiredProps> = {
   androidSdkApiKey: 'androidSdkApiKey_PLACEHOLDER',
   androidSdkEndpoint: 'androidSdkEndpoint_PLACEHOLDER',
   iosSdkApiKey: 'iosSdkApiKey_PLACEHOLDER',
@@ -21,9 +21,8 @@ const requiredPropsDefaultValues = {
 export const guardProps = (props: Partial<ConfigProps>): ConfigProps =>
   Object.fromEntries(
     Object.entries(props).map(([propName, providedValue]) => {
-      const name = propName as RequiredProps;
-
-      if (!(name in requiredPropsTypes)) return [propName, providedValue];
+      if (!(propName in requiredPropsTypes)) return [propName, providedValue];
+      const name = propName as RequiredProps; // Since propName is a required prop, we can cast the type.
 
       let value = providedValue;
 

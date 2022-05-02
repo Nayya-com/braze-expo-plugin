@@ -13,7 +13,6 @@ import {
   notificationIconResource,
 } from '../helpers/notificationIcon';
 
-// // TODO: store the image files and return the asset path
 const generateFilesAndReturnResource = async (
   iconPath: string | undefined,
   projectRoot: string,
@@ -33,7 +32,7 @@ const generateBrazeXmlContents = async (
     firebaseCloudMessagingSenderId,
     smallNotificationIcon,
     largeNotificationIcon,
-    iconBackgroundColor,
+    notificationIconBackgroundColor,
   }: ConfigProps,
   projectRoot: string,
 ) => {
@@ -68,8 +67,8 @@ ${
     : ''
 }
 ${
-  iconBackgroundColor
-    ? `<integer name="com_braze_default_notification_accent_color">${iconBackgroundColor}</integer>`
+  notificationIconBackgroundColor
+    ? `<integer name="com_braze_default_notification_accent_color">${notificationIconBackgroundColor}</integer>`
     : ''
 }
 </resources>

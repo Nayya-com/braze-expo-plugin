@@ -27,6 +27,7 @@ const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK 
 // Optional props:
 const smallNotificationIcon = './assets/icons/notification-icon-small.png';
 const largeNotificationIcon = './assets/icons/notification-icon-large.png';
+const notificationIconBackgroundColor = '#6667AB';
 
 export default {
   expo: {
@@ -45,7 +46,7 @@ export default {
           firebaseBoMVersion,
           smallNotificationIcon,
           largeNotificationIcon,
-          iconBackgroundColor,
+          notificationIconBackgroundColor,
         }
       ],
     ],

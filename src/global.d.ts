@@ -7,10 +7,11 @@ declare type ConfigProps = {
   firebaseBoMVersion: string;
   smallNotificationIcon?: string;
   largeNotificationIcon?: string;
-  iconBackgroundColor?: string;
+  notificationIconBackgroundColor?: string;
 };
 
-type RequiredProps = keyof Omit<
-  ConfigProps,
-  'smallNotificationIcon' | 'largeNotificationIcon' | 'iconBackgroundColor'
->;
+type OptionalKeys<T> = {
+  [K in keyof T]: undefined extends T[K] ? never : K;
+}[keyof T];
+
+type RequiredProps = Exclude<OptionalKeys<ConfigProps>, undefined>;
