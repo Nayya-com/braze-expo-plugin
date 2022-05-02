@@ -159,7 +159,7 @@ const withBrazeXmlMod = (config: ExpoConfig, action: Mod) => {
   });
 };
 
-/*
+/**
  * Mod to execute the brazeXml base mod
  */
 export const withBrazeXml: ConfigPlugin = (configOuter) =>

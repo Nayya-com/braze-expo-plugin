@@ -18,15 +18,15 @@ const configureBrazeSDKGenerator = ({
     withLaunchOptions:launchOptions];
 `;
 
-/*
+/**
  * Reference from Braze docs:
- *   - https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-5-enable-push-handling
- *   - https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-4-register-push-tokens-with-braze
- *   - https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#using-usernotification-framework-ios-10
+ *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-5-enable-push-handling
+ *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-4-register-push-tokens-with-braze
+ *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#using-usernotification-framework-ios-10
  */
 
 // Register for push notifications (gets added to application:didFinishLaunchingWithOptions: delegate method)
-//   Also: set currentNotificationCenter.delegate = self, which allows Braze to handle incoming notifications.
+// Also: set currentNotificationCenter.delegate = self, which allows Braze to handle incoming notifications.
 const registerForPushNotificationsAndSetCenterDelegateBraze = `
   if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];

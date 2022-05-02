@@ -1,6 +1,6 @@
-/*
- * NOTE: most of this code is based on the expo-notifications config plugin
- * https://github.com/expo/expo/tree/master/packages/expo-notifications
+/**
+ * Most of this code is based on the expo-notifications config plugin
+ * @see https://github.com/expo/expo/tree/master/packages/expo-notifications
  */
 
 import { generateImageAsync } from '@expo/image-utils';

@@ -1,6 +1,6 @@
-/*
- * NOTE: most of this code is based on the onesignal-expo-plugin config plugin
- * https://github.com/OneSignal/onesignal-expo-plugin
+/**
+ * Most of this code is based on the onesignal-expo-plugin config plugin
+ * @see https://github.com/OneSignal/onesignal-expo-plugin
  */
 
 import { ConfigPlugin, withXcodeProject } from '@expo/config-plugins';
@@ -8,14 +8,20 @@ import fs from 'fs';
 import xcode from 'xcode';
 
 import { name as thisPackageName } from '../../package.json';
+import {
+  updateNseInfoPlist,
+  updateEntitlements,
+} from './helpers/notificationServiceExtension';
 import { getTargetIosVersion } from './helpers/targetIosVersion';
 
 const NSE_NAME = 'BrazeNotificationServiceExtension';
-const LOCAL_PATH_TO_NSE_FILES = `node_modules/${thisPackageName}/build/${NSE_NAME}`;
+
 const PLIST_FILENAME = 'Info.plist';
+const ENTITLEMENTS_FILENAME = `${NSE_NAME}.entitlements`;
+
+const LOCAL_PATH_TO_NSE_FILES = `node_modules/${thisPackageName}/build/${NSE_NAME}`;
+
 const TARGETED_DEVICE_FAMILY = `"1,2"`;
-const BUNDLE_SHORT_VERSION_RE = /\{\{BUNDLE_SHORT_VERSION\}\}/;
-const BUNDLE_VERSION_RE = /\{\{BUNDLE_VERSION\}\}/;
 
 interface Options {
   appleTeamId: string;
@@ -25,26 +31,6 @@ interface Options {
   platformProjectRoot: string;
   projectName: string;
 }
-
-const updateNseInfoPlist = ({
-  bundleVersion,
-  bundleShortVersion,
-  infoPlistTargetFile,
-}: {
-  bundleVersion: string;
-  bundleShortVersion: string;
-  infoPlistTargetFile: string;
-}) => {
-  let plistFileString = fs.readFileSync(infoPlistTargetFile, 'utf-8');
-
-  plistFileString = plistFileString.replace(BUNDLE_VERSION_RE, bundleVersion);
-  plistFileString = plistFileString.replace(
-    BUNDLE_SHORT_VERSION_RE,
-    bundleShortVersion,
-  );
-
-  fs.writeFileSync(infoPlistTargetFile, plistFileString);
-};
 
 const addNotificationServiceExtension = async (options: Options) => {
   const {
@@ -73,21 +59,30 @@ const addNotificationServiceExtension = async (options: Options) => {
 
     const files = [
       PLIST_FILENAME,
+      ENTITLEMENTS_FILENAME,
       'NotificationService.h',
       'NotificationService.m',
     ];
 
+    const getTargetFile = (filename: string) =>
+      `${platformProjectRoot}/${NSE_NAME}/${filename}`;
+
     files.forEach((filename) => {
-      const targetFile = `${platformProjectRoot}/${NSE_NAME}/${filename}`;
+      const targetFile = getTargetFile(filename);
       fs.copyFileSync(`${LOCAL_PATH_TO_NSE_FILES}/${filename}`, targetFile);
     });
 
     /* MODIFY COPIED EXTENSION FILES */
-    const infoPlistTargetFile = `${platformProjectRoot}/${NSE_NAME}/${PLIST_FILENAME}`;
+    const infoPlistTargetFile = getTargetFile(PLIST_FILENAME);
     updateNseInfoPlist({
       bundleVersion,
       bundleShortVersion,
       infoPlistTargetFile,
+    });
+
+    updateEntitlements({
+      bundleIdentifier,
+      entitlementsTargetFile: getTargetFile(ENTITLEMENTS_FILENAME),
     });
 
     // Create new PBXGroup for the extension
@@ -158,6 +153,7 @@ const addNotificationServiceExtension = async (options: Options) => {
         buildSettingsObj.DEVELOPMENT_TEAM = appleTeamId;
         buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = iosTargetVersion;
         buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY;
+        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_NAME}/${ENTITLEMENTS_FILENAME}`;
         buildSettingsObj.CODE_SIGN_STYLE = 'Automatic';
       }
     }
