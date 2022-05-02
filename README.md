@@ -44,7 +44,7 @@ export default {
     plugins: [
       // ...
       [
-        'braze-expo-plugin',
+        '@nayya/braze-expo-plugin',
         {
           androidSdkApiKey,
           androidSdkEndpoint,
