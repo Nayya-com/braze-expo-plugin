@@ -29,13 +29,13 @@ interface Options {
 const updateNseInfoPlist = ({
   bundleVersion,
   bundleShortVersion,
+  infoPlistTargetFile,
 }: {
   bundleVersion: string;
   bundleShortVersion: string;
+  infoPlistTargetFile: string;
 }) => {
-  const plistFilePath = `${LOCAL_PATH_TO_NSE_FILES}/${PLIST_FILENAME}`;
-
-  let plistFileString = fs.readFileSync(plistFilePath, 'utf-8');
+  let plistFileString = fs.readFileSync(infoPlistTargetFile, 'utf-8');
 
   plistFileString = plistFileString.replace(BUNDLE_VERSION_RE, bundleVersion);
   plistFileString = plistFileString.replace(
@@ -43,7 +43,7 @@ const updateNseInfoPlist = ({
     bundleShortVersion,
   );
 
-  fs.writeFileSync(plistFilePath, plistFileString);
+  fs.writeFileSync(infoPlistTargetFile, plistFileString);
 };
 
 const addNotificationServiceExtension = async (options: Options) => {
@@ -83,7 +83,12 @@ const addNotificationServiceExtension = async (options: Options) => {
     });
 
     /* MODIFY COPIED EXTENSION FILES */
-    updateNseInfoPlist({ bundleVersion, bundleShortVersion });
+    const infoPlistTargetFile = `${platformProjectRoot}/${NSE_NAME}/${PLIST_FILENAME}`;
+    updateNseInfoPlist({
+      bundleVersion,
+      bundleShortVersion,
+      infoPlistTargetFile,
+    });
 
     // Create new PBXGroup for the extension
     const extGroup = xcodeProject.addPbxGroup(files, NSE_NAME, NSE_NAME);
