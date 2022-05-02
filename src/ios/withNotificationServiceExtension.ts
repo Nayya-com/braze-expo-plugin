@@ -11,10 +11,9 @@ import { name as thisPackageName } from '../../package.json';
 import {
   updateNseInfoPlist,
   updateEntitlements,
+  NSE_NAME,
 } from './helpers/notificationServiceExtension';
 import { getTargetIosVersion } from './helpers/targetIosVersion';
-
-const NSE_NAME = 'BrazeNotificationServiceExtension';
 
 const PLIST_FILENAME = 'Info.plist';
 const ENTITLEMENTS_FILENAME = `${NSE_NAME}.entitlements`;

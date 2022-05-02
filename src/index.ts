@@ -11,6 +11,7 @@ import { guardProps, guardConfig } from './helpers/guards';
 import { withAppDelegateModifications } from './ios/withAppDelegateModifications';
 import { withAppGroupPermissions } from './ios/withAppGroupPermissions';
 import { withApsEnvironment } from './ios/withApsEnvironment';
+import { withEasManagedCredentials } from './ios/withEasManagedCredentials';
 import { withInfoPlistModification } from './ios/withInfoPlistModification';
 import { withNotificationServiceExtension } from './ios/withNotificationServiceExtension';
 import { withRemoteNotificationsPermissions } from './ios/withRemoteNotificationsPermissions';
@@ -28,6 +29,7 @@ const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
     withAppGroupPermissions,
     withApsEnvironment,
     withBrazeXml,
+    withEasManagedCredentials,
     withInfoPlistModification,
     withMainActivityModifications,
     withMainApplicationModifications,

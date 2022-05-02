@@ -2,6 +2,8 @@ import fs from 'fs';
 
 import { generateAppGroup } from './appGroups';
 
+export const NSE_NAME = 'BrazeNotificationServiceExtension';
+
 export const updateNseInfoPlist = ({
   bundleVersion,
   bundleShortVersion,
@@ -32,20 +34,10 @@ export const updateEntitlements = ({
   bundleIdentifier: string;
   entitlementsTargetFile: string;
 }) => {
-  const APS_ENVIRONMENT_MODE_RE = /\{\{APS_ENVIRONMENT_MODE\}\}/;
   const GROUP_IDENTIFIER_RE = /\{\{GROUP_IDENTIFIER\}\}/;
-
-  const APS_MODE =
-    process.env.EAS_BUILD_PROFILE === 'development'
-      ? 'development'
-      : 'production';
 
   let entitlementsFileString = fs.readFileSync(entitlementsTargetFile, 'utf-8');
 
-  entitlementsFileString = entitlementsFileString.replace(
-    APS_ENVIRONMENT_MODE_RE,
-    APS_MODE,
-  );
   entitlementsFileString = entitlementsFileString.replace(
     GROUP_IDENTIFIER_RE,
     generateAppGroup(bundleIdentifier),
