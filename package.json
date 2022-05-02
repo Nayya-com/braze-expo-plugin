@@ -16,7 +16,9 @@
     "clean": "rm -rf build",
     "expo-module": "expo-module",
     "lint": "eslint .",
-    "tc": "tsc --noEmit"
+    "tc": "tsc --noEmit",
+    "prepare": "yarn clean && yarn build",
+    "prepublishOnly": "yarn tc && yarn lint"
   },
   "devDependencies": {
     "@expo/config-plugins": "^4.1.4",

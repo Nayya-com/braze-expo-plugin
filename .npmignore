@@ -1,1 +1,2 @@
-# Empty .npmignore file so npm & yarn don't use .gitignore and miss the build/ directory
+.github/
+node_modules/
