@@ -21,7 +21,7 @@ const iosSdkApiKey = process.env.BRAZE_SDK_API_KEY_IOS;
 const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
 const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
-const appleTeamId = '27H4B6Z536';
+const appleTeamId = '1234567890';
 
 // Optional props:
 const smallNotificationIcon = './assets/icons/notification-icon-small.png';
