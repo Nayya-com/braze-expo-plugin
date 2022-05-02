@@ -7,6 +7,7 @@ const requiredPropsTypes: Record<RequiredProps, string> = {
   iosSdkEndpoint: 'string',
   firebaseCloudMessagingSenderId: 'string',
   firebaseBoMVersion: 'string',
+  appleTeamId: 'string',
 };
 
 const requiredPropsDefaultValues: Pick<ConfigProps, RequiredProps> = {
@@ -15,6 +16,7 @@ const requiredPropsDefaultValues: Pick<ConfigProps, RequiredProps> = {
   iosSdkApiKey: 'iosSdkApiKey_PLACEHOLDER',
   iosSdkEndpoint: 'iosSdkEndpoint_PLACEHOLDER',
   firebaseCloudMessagingSenderId: 'firebaseCloudMessagingSenderId_PLACEHOLDER',
+  appleTeamId: 'appleTeamID_PLACEHOLDER',
   firebaseBoMVersion: '29.3.1',
 };
 

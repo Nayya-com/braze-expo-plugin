@@ -23,6 +23,7 @@ const iosSdkApiKey = process.env.BRAZE_SDK_API_KEY_IOS;
 const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
 const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
+const appleTeamId = '27H4B6Z536';
 
 // Optional props:
 const smallNotificationIcon = './assets/icons/notification-icon-small.png';
@@ -31,7 +32,16 @@ const notificationIconBackgroundColor = '#6667AB';
 
 export default {
   expo: {
-    sdkVersion: '44.0.0', // This is required, and should line up with the version specified in your package.json.
+    /* NOTE: the following config items are all required: */
+    name: 'YourApp',
+    sdkVersion: '44.0.0',
+    ios: {
+      buildNumber: '1.2.3',
+      bundleIdentifier: 'your.app.here',
+    },
+    android: {
+      versionCode: 123,
+    },
     // ...
     plugins: [
       // ...
@@ -44,6 +54,7 @@ export default {
           iosSdkEndpoint,
           firebaseCloudMessagingSenderId,
           firebaseBoMVersion,
+          appleTeamId,
           smallNotificationIcon,
           largeNotificationIcon,
           notificationIconBackgroundColor,

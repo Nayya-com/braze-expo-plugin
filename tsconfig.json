@@ -3,7 +3,8 @@
   "compilerOptions": {
       "rootDir": "./",
       "outDir": "./build",
-      "declaration": false
+      "declaration": false,
+      "resolveJsonModule": true
   },
   "include": [
     "./src"

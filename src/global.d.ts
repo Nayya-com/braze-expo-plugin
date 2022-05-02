@@ -5,6 +5,7 @@ declare type ConfigProps = {
   iosSdkEndpoint: string;
   firebaseCloudMessagingSenderId: string;
   firebaseBoMVersion: string;
+  appleTeamId: string;
   smallNotificationIcon?: string;
   largeNotificationIcon?: string;
   notificationIconBackgroundColor?: string;
