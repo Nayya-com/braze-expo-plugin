@@ -6,6 +6,8 @@ Currently, the Braze React Native SDK does not support the Expo managed workflow
 
 The [#119](https://github.com/Appboy/appboy-react-sdk/issues/119) issue in the Braze SDK repository is tracking their progress on a comprehensive config plugin.
 
+NOTE: this plugin assumes you are using `eas build` with EAS managed credentials, and has not been tested for other configurations.
+
 ## Installation
 ```
 yarn add @nayya/braze-expo-plugin
@@ -69,6 +71,9 @@ For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/
 
 ## TODO
 
+- Add tests
+  - Unit tests for helpers
+  - Unit tests for all mods
 - Add support for additional customization on Android:
   - [Back stack behavior](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationcustomizing-back-stack-behavior)
   - [Notification channels](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/integration/standard_integrationstep-5-define-notification-channels)
@@ -76,6 +81,8 @@ For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/
   - [Custom handling for push receipts, opens, dismissals, and key-value pairs](https://www.braze.com/docs/developer_guide/platform_integration_guides/androidush_notifications/android/integration/standard_integration/#custom-handling-for-push-receipts-opens-dismissals-and-key-value-pairs)
   - [HTML push notification support](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/customization/html_rendered_push#html-push-notifications)
   - [Custom sounds](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/customization/advanced_settings/#sounds)
+  - [In-App Message Customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/in-app_messaging/customization)
+  - [Content Card Customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/content_cards/customization)
 - Add support for additional customization on iOS:
   - [Auto-clearing badge number](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/customization/badges)
   - [Custom sounds](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/customization/custom_sounds/)
@@ -83,3 +90,5 @@ For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/
   - [Push primer integration](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/push_primer/)
   - [Push stories](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/push_story/#step-2-adding-the-notification-content-extension-target)
   - [Advanced implementation options](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/implementation_guide/)
+  - [In-App Messaging Customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/in-app_messaging/customization)
+  - [Content Card Customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/content_cards/customization)
