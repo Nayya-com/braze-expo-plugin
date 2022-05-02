@@ -10,9 +10,9 @@
   "author": "Nayya",
   "license": "MIT",
   "scripts": {
-    "copy-nse": "cp -r src/ios/BrazeNotificationServiceExtension build",
-    "build": "yarn copy-nse && tsc",
-    "build:watch": "yarn copy-nse && tsc --watch",
+    "copy-nse": "cp -r src/ios/BrazeNotificationServiceExtension build/BrazeNotificationServiceExtension",
+    "build": "tsc && yarn copy-nse",
+    "build:watch": "yarn build && tsc --watch",
     "clean": "rm -rf build",
     "expo-module": "expo-module",
     "lint": "eslint .",

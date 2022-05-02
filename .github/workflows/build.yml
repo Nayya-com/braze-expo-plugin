@@ -13,14 +13,19 @@ jobs:
       - name: git-checkout
         uses: actions/checkout@v2
 
-      - name: Save builds branch in builds-temp & reset it
+      - name: Check out builds branch, merge main
         run: |
+          git config --global user.email "team@nayya.com"
+          git config --global user.name "Nayya"
+
           git fetch --all
           git checkout builds
-          git checkout -b builds-temp
-          git checkout builds
-          git reset --hard main
-          git checkout main
+          git pull
+          git merge --no-ff --no-commit --allow-unrelated-histories main
+
+          git reset HEAD .gitignore
+          git checkout -- .gitignore
+          git commit -m "merge main"
 
       - name: Install all dependencies
         run: yarn
@@ -30,11 +35,5 @@ jobs:
 
       - name: Push to builds
         run: |
-          git config --global user.email "team@nayya.com"
-          git config --global user.name "Nayya"
-
-          git checkout builds
-          git checkout builds-temp .gitignore
-          git add .gitignore build
-          git commit -m "new build"
-          git push --force
+          git add .
+          git commit -m "new build" || echo "No additional commit needed"
