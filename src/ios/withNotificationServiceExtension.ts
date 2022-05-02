@@ -15,7 +15,7 @@ import {
 } from './helpers/notificationServiceExtension';
 import { getTargetIosVersion } from './helpers/targetIosVersion';
 
-const PLIST_FILENAME = 'Info.plist';
+const PLIST_FILENAME = `${NSE_NAME}-Info.plist`;
 const ENTITLEMENTS_FILENAME = `${NSE_NAME}.entitlements`;
 
 const LOCAL_PATH_TO_NSE_FILES = `node_modules/${thisPackageName}/build/${NSE_NAME}`;
