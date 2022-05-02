@@ -25,6 +25,37 @@ const generateFilesAndReturnResource = async (
   return notificationIconResource(suffix);
 };
 
+const integerFromHexColor = (hexOrig: string) => {
+  let hex = hexOrig;
+
+  // Remove leading '#'
+  if (hex.startsWith('#')) {
+    hex = hex.slice(1);
+  }
+
+  // If shorthand (like 'fff'), expand to 6-digit form
+  if (hex.length === 3) {
+    hex = [hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]].join('');
+  }
+
+  // If missing the leading two alpha digits, add 'ff' for full opacity
+  if (hex.length === 6) {
+    hex = `ff${hex}`;
+  }
+
+  // Guard for invalid input
+  if (hex.length !== 8) {
+    throw new Error(
+      `Invalid format for color. Should be in hex form like #fff, #aabbcc, or #aabbccdd. Instead got ${hexOrig}`,
+    );
+  }
+
+  // Add leading hex prefix (Java)
+  hex = `0x${hex}`;
+
+  return hex;
+};
+
 const generateBrazeXmlContents = async (
   {
     androidSdkApiKey,
@@ -48,6 +79,10 @@ const generateBrazeXmlContents = async (
     'large',
   );
 
+  const color =
+    notificationIconBackgroundColor &&
+    integerFromHexColor(notificationIconBackgroundColor);
+
   return `
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -68,7 +103,7 @@ ${
 }
 ${
   notificationIconBackgroundColor
-    ? `<integer name="com_braze_default_notification_accent_color">${notificationIconBackgroundColor}</integer>`
+    ? `<integer name="com_braze_default_notification_accent_color">${color}</integer>`
     : ''
 }
 </resources>

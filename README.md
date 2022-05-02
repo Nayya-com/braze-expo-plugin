@@ -61,8 +61,8 @@ For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/
 ## TODO
 
 #### High priority
-- Add support for icons for Android
-- Add support for images on iOS
+- [X] Add support for icons for Android
+- [ ] Add support for images on iOS
 
 #### Low priority
 - Add support for additional customization:
