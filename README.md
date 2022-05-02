@@ -8,6 +8,8 @@ The [#119](https://github.com/Appboy/appboy-react-sdk/issues/119) issue in the B
 
 NOTE: this plugin assumes you are using `eas build` with EAS managed credentials, and has not been tested for other configurations.
 
+DISCLAIMER: this may or may not meet the needs of your Expo app, and it should not be considered stable or production ready. It is subject to breaking changes until we reach v1.0.0.
+
 ## Installation
 ```
 yarn add @nayya/braze-expo-plugin
