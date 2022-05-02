@@ -10,6 +10,7 @@ import { withMainApplicationModifications } from './android/withMainApplicationM
 import { guardProps, guardConfig } from './helpers/guards';
 import { withAppDelegateModifications } from './ios/withAppDelegateModifications';
 import { withInfoPlistModification } from './ios/withInfoPlistModification';
+import { withNotificationServiceExtension } from './ios/withNotificationServiceExtension';
 
 const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
   guardConfig(config);
@@ -25,6 +26,7 @@ const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
     withInfoPlistModification,
     withMainActivityModifications,
     withMainApplicationModifications,
+    withNotificationServiceExtension,
 
     // Base mods MUST be last (see https://docs.expo.dev/guides/config-plugins/)
     withBrazeXmlBaseMod,
