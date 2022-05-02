@@ -39,3 +39,4 @@ jobs:
         run: |
           git add .
           git commit -m "new build" || echo "No additional commit needed"
+          git push
