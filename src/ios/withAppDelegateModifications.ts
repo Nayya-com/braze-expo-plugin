@@ -1,8 +1,5 @@
 import { ConfigPlugin, withAppDelegate } from '@expo/config-plugins';
 
-const importRegex = /^(#import .*)\n/m;
-const addedImport = '#import "Appboy-iOS-SDK/AppboyKit.h"\n';
-
 const didFinishLaunchingMethodRegex =
   /(- \(BOOL\)application:\(UIApplication \*\)application didFinishLaunchingWithOptions:\(NSDictionary \*\)launchOptions(\s|\n)*?\{)/;
 
@@ -86,6 +83,64 @@ const additionalMethodsForPushNotifications = `${brazeCodeSnippets.join(
   '\n',
 )}\n`; // Join w/ newlines and ensure a newline at the end.
 
+const addImport = (stringContents: string) => {
+  const importRegex = /^(#import .*)\n/m;
+  const addedImport = '#import "Appboy-iOS-SDK/AppboyKit.h"';
+
+  const match = stringContents.match(importRegex);
+  let endOfMatchIndex: number;
+  if (!match || match.index === undefined) {
+    // No imports found, just add to start of file:
+    endOfMatchIndex = 0;
+  } else {
+    // Add after first import:
+    endOfMatchIndex = match.index + match[0].length;
+  }
+
+  stringContents = [
+    stringContents.slice(0, endOfMatchIndex),
+    addedImport,
+    stringContents.slice(endOfMatchIndex),
+  ].join('\n');
+
+  return stringContents;
+};
+
+const badgeClearingFullCode = `
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
+`;
+
+const addBadgeClearing = (stringContents: string) => {
+  const methodRegex =
+    /(-\s*\(\s*void\s*\)\s*applicationDidBecomeActive\s*:\s*\(\s*UIApplication\s*\*\s*\)\s*application\s*\{)/;
+  const addedCode =
+    '  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;';
+
+  const match = stringContents.match(methodRegex);
+
+  // If method doesn't exist, add the method before didFinishLaunching:
+  if (!match || match.index === undefined) {
+    stringContents = stringContents.replace(
+      didFinishLaunchingMethodRegex,
+      `${badgeClearingFullCode}\n$1`,
+    );
+    return stringContents;
+  }
+
+  // Otherwise, add to the existing method:
+  const endOfMatchIndex = match.index + match[0].length;
+
+  stringContents = [
+    stringContents.slice(0, endOfMatchIndex),
+    addedCode,
+    stringContents.slice(endOfMatchIndex),
+  ].join('\n');
+
+  return stringContents;
+};
+
 export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
   configOuter,
   props,
@@ -95,17 +150,8 @@ export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
   return withAppDelegate(configOuter, (config) => {
     let stringContents = config.modResults.contents;
 
-    const match = stringContents.match(importRegex);
-    if (!match || match.index === undefined) {
-      throw new Error('Unable to match "#import" in AppDelegate.m');
-    }
-    const endOfMatchIndex = match.index + match[0].length;
-
-    stringContents = [
-      stringContents.slice(0, endOfMatchIndex),
-      addedImport,
-      stringContents.slice(endOfMatchIndex),
-    ].join('');
+    stringContents = addImport(stringContents);
+    stringContents = addBadgeClearing(stringContents);
 
     const configureBrazeSDK = configureBrazeSDKGenerator({ iosSdkApiKey });
 
