@@ -1,6 +1,6 @@
 {
   "name": "@nayya/braze-expo-plugin",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Expo config plugin for the Braze React Native SDK",
   "main": "app.plugin.js",
   "repository": {
