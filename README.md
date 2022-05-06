@@ -4,11 +4,14 @@
 
 Currently, the Braze React Native SDK does not support the Expo managed workflow. This means that Braze customers who use the Expo managed workflow and want to include the Braze SDK are unable to do so unless they write their own Expo config plugin. This plugin meets our needs at Nayya, but may or may not meet the needs of other Braze SDK users.
 
-The [#119](https://github.com/Appboy/appboy-react-sdk/issues/119) issue in the Braze SDK repository is tracking their progress on a comprehensive config plugin.
+Appboy/appboy-react-sdk#119 is tracking progress on a comprehensive config plugin.
 
-NOTE: this plugin assumes you are using `eas build` with EAS managed credentials, and has not been tested for other configurations.
+### Disclaimer
+This plugin may or may not meet the needs of your Expo app, and it should not be considered stable or production ready.
 
-DISCLAIMER: this may or may not meet the needs of your Expo app, and it should not be considered stable or production ready. It is subject to breaking changes until we reach v1.0.0.
+It is subject to breaking changes until we reach v1.0.0.
+
+It has only been tested with Expo SDK v44.0.0 using `eas build` with EAS managed credentials on a limited set of Android and iOS OS versions.
 
 ## Installation
 ```
