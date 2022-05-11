@@ -13,7 +13,6 @@ import {
   updateEntitlements,
   NSE_NAME,
 } from './helpers/notificationServiceExtension';
-import { getTargetIosVersion } from './helpers/targetIosVersion';
 
 const PLIST_FILENAME = `${NSE_NAME}-Info.plist`;
 const ENTITLEMENTS_FILENAME = `${NSE_NAME}.entitlements`;
@@ -29,7 +28,8 @@ interface Options {
   bundleVersion: string;
   platformProjectRoot: string;
   projectName: string;
-}
+  iosDeploymentTarget: string;
+} // TODO: this should inherit from ConfigProps type
 
 const addNotificationServiceExtension = async (options: Options) => {
   const {
@@ -39,10 +39,8 @@ const addNotificationServiceExtension = async (options: Options) => {
     bundleVersion,
     platformProjectRoot,
     projectName,
+    iosDeploymentTarget,
   } = options;
-
-  // not awaiting in order to not block main thread
-  const iosTargetVersion = await getTargetIosVersion(platformProjectRoot);
 
   const projPath = `${platformProjectRoot}/${projectName}.xcodeproj/project.pbxproj`;
 
@@ -150,7 +148,7 @@ const addNotificationServiceExtension = async (options: Options) => {
       ) {
         const buildSettingsObj = configurations[key].buildSettings;
         buildSettingsObj.DEVELOPMENT_TEAM = appleTeamId;
-        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = iosTargetVersion;
+        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = iosDeploymentTarget;
         buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY;
         buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_NAME}/${ENTITLEMENTS_FILENAME}`;
         buildSettingsObj.CODE_SIGN_STYLE = 'Automatic';
@@ -171,7 +169,7 @@ export const withNotificationServiceExtension: ConfigPlugin<ConfigProps> = (
 ) => {
   return withXcodeProject(configOuter, async (config) => {
     const { modRequest, ios, version: bundleShortVersion } = config;
-    const { appleTeamId } = props;
+    const { appleTeamId, iosDeploymentTarget } = props;
 
     if (ios === undefined)
       throw new Error(
@@ -212,6 +210,7 @@ export const withNotificationServiceExtension: ConfigPlugin<ConfigProps> = (
       bundleVersion,
       platformProjectRoot,
       projectName,
+      iosDeploymentTarget: iosDeploymentTarget || '12.0',
     };
 
     await addNotificationServiceExtension(options);

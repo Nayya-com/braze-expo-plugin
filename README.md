@@ -29,6 +29,7 @@ const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
 const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
 const appleTeamId = '1234567890';
+const iosDeploymentTarget = '12.0'; // Defaults to '12.0'
 
 // Optional props:
 const smallNotificationIcon = './assets/icons/notification-icon-small.png';
@@ -63,6 +64,7 @@ export default {
           smallNotificationIcon,
           largeNotificationIcon,
           notificationIconBackgroundColor,
+          iosDeploymentTarget,
         }
       ],
     ],
