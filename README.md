@@ -9,9 +9,12 @@ Appboy/appboy-react-sdk#119 is tracking progress on a comprehensive config plugi
 ### Disclaimer
 This plugin may or may not meet the needs of your Expo app, and it should not be considered stable or production ready.
 
-It is subject to breaking changes until we reach v1.0.0.
+It is subject to breaking changes until we reach `v1.0.0`.
 
-It has only been tested with Expo SDK v44.0.0 using `eas build` with EAS managed credentials on a limited set of Android and iOS OS versions.
+It has only been tested with:
+ - Expo SDK versions 44 and 45
+ - Using `eas build` with EAS managed credentials
+ - A limited set of Android and iOS versions
 
 ## Installation
 ```
@@ -29,9 +32,9 @@ const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
 const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
 const appleTeamId = '1234567890';
-const iosDeploymentTarget = '12.0'; // Defaults to '12.0'
 
 // Optional props:
+const iosDeploymentTarget = '12.0'; // Defaults to '12.0'
 const smallNotificationIcon = './assets/icons/notification-icon-small.png';
 const largeNotificationIcon = './assets/icons/notification-icon-large.png';
 const notificationIconBackgroundColor = '#6667AB';
@@ -77,7 +80,7 @@ For local builds, define these vars in your local environment before building (c
 For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/build-reference/variables/#secrets-on-the-expo-website) and then run the `eas build` command.
 
 ## TODO
-
+- Ingest `deploymentTarget` from `expo-build-properties` config plugin if it's in use.
 - Add tests
   - Unit tests for helpers
   - Unit tests for all mods
