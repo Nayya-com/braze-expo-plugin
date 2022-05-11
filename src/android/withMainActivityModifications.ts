@@ -2,6 +2,17 @@ import { ConfigPlugin, withMainActivity } from '@expo/config-plugins';
 
 import { getLaunchMode } from './helpers/launchMode';
 
+const ensureIntentImport = (stringContents: string): string => {
+  const importString = `import android.content.Intent;`;
+
+  if (!stringContents.includes(importString)) {
+    // Add the import before the first existing import:
+    stringContents = stringContents.replace(/(import)/, `${importString}\n$1`);
+  }
+
+  return stringContents;
+};
+
 const onNewIntentFullMethod = `
   @Override
   public void onNewIntent(Intent intent) {
@@ -61,6 +72,7 @@ export const withMainActivityModifications: ConfigPlugin = (configOuter) => {
     if (launchMode === 'singleTask') {
       let stringContents = config.modResults.contents;
 
+      stringContents = ensureIntentImport(stringContents);
       stringContents = addOrModifyOnNewIntent(stringContents);
 
       config.modResults.contents = stringContents;
