@@ -2,11 +2,14 @@ import { ConfigPlugin, withMainActivity } from '@expo/config-plugins';
 
 import { getLaunchMode } from './helpers/launchMode';
 
-const onNewIntentFullMethod = `@Override
-public void onNewIntent(Intent intent) {
-  super.onNewIntent(intent);
-  setIntent(intent);
-}`;
+const onNewIntentFullMethod = `
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    setIntent(intent);
+  }
+
+`;
 
 const mainActivityClassRegex = /(public\s+class\s+MainActivity.*\{\s*?\n)/;
 
