@@ -20,27 +20,33 @@ const configureBrazeSDKGenerator = ({
  *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-5-enable-push-handling
  *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#step-4-register-push-tokens-with-braze
  *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/integration/#using-usernotification-framework-ios-10
+ *   - @see https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/push_notifications/push_primer
  */
 
 // Register for push notifications (gets added to application:didFinishLaunchingWithOptions: delegate method)
 // Also: set currentNotificationCenter.delegate = self, which allows Braze to handle incoming notifications.
 const registerForPushNotificationsAndSetCenterDelegateBraze = `
-  if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
+  if (@available(iOS 10.0, *)) {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
-    UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-    if (@available(iOS 12.0, *)) {
-    options = options | UNAuthorizationOptionProvisional;
-    }
-    [center requestAuthorizationWithOptions:options
-                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                            [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+      if (settings.authorizationStatus != UNAuthorizationStatusNotDetermined) {
+        // authorization has already been requested, need to follow usual steps
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+          [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+        }];
+        center.delegate = self;
+        [center setNotificationCategories:[ABKPushUtils getAppboyUNNotificationCategorySet]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+      }
     }];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
   } else {
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:nil];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    UIApplication *sharedApplication = [UIApplication sharedApplication];
+    UIUserNotificationSettings *notificationSettings = [sharedApplication currentUserNotificationSettings];
+    if (notificationSettings.types) {
+      UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:[ABKPushUtils getAppboyUIUserNotificationCategorySet]];
+      [sharedApplication registerUserNotificationSettings:settings];
+      [sharedApplication registerForRemoteNotifications];
+    }
   }
 `;
 
