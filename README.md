@@ -27,17 +27,18 @@ Add the plugin and its props to your `app.config.js`:
 // Required props:
 const androidSdkApiKey = process.env.BRAZE_SDK_API_KEY_ANDROID;
 const androidSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_ANDROID;
+const appleTeamId = '1234567890';
+const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
+const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
 const iosSdkApiKey = process.env.BRAZE_SDK_API_KEY_IOS;
 const iosSdkEndpoint = process.env.BRAZE_SDK_ENDPOINT_IOS;
-const firebaseCloudMessagingSenderId = process.env.FIREBASE_SENDER_ID;
-const firebaseBoMVersion = '29.3.1'; // Determines the versions of Firebase SDK packages. See https://firebase.google.com/docs/android/setup#available-libraries for versions.
-const appleTeamId = '1234567890';
 
 // Optional props:
 const iosDeploymentTarget = '12.0'; // Defaults to '12.0'
-const smallNotificationIcon = './assets/icons/notification-icon-small.png';
 const largeNotificationIcon = './assets/icons/notification-icon-large.png';
 const notificationIconBackgroundColor = '#6667AB';
+const shouldUseProvisionalPush = false; // Defaults to 'false', set to `true` if you want to use Provisional Push on iOS instead of explicitly asking for permission. See https://developer.apple.com/documentation/**usernotifications**/asking_permission_to_use_notifications#3544375 for reference.
+const smallNotificationIcon = './assets/icons/notification-icon-small.png';
 
 export default {
   expo: {
@@ -57,17 +58,21 @@ export default {
       [
         '@nayya/braze-expo-plugin',
         {
+          // Required props:
           androidSdkApiKey,
           androidSdkEndpoint,
+          appleTeamId,
+          firebaseBoMVersion,
+          firebaseCloudMessagingSenderId,
           iosSdkApiKey,
           iosSdkEndpoint,
-          firebaseCloudMessagingSenderId,
-          firebaseBoMVersion,
-          appleTeamId,
-          smallNotificationIcon,
+
+          // Optional props:
+          iosDeploymentTarget,
           largeNotificationIcon,
           notificationIconBackgroundColor,
-          iosDeploymentTarget,
+          shouldUseProvisionalPush,
+          smallNotificationIcon,
         }
       ],
     ],

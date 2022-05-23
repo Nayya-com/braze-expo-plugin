@@ -10,6 +10,7 @@ declare type ConfigProps = {
   smallNotificationIcon?: string;
   largeNotificationIcon?: string;
   notificationIconBackgroundColor?: string;
+  shouldUseProvisionalPush?: boolean;
 };
 
 type OptionalKeys<T> = {
