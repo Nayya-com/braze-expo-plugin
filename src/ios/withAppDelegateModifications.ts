@@ -30,37 +30,25 @@ const registerForPushNotificationsAndSetCenterDelegateBraze = ({
 }: {
   shouldUseProvisionalPush: boolean;
 }) => `
-  if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
-    UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-${
-  shouldUseProvisionalPush
-    ? `
-    if (@available(iOS 12.0, *)) {
-      options = options | UNAuthorizationOptionProvisional;
-    }
-`
-    : ''
-}
-
-    [center requestAuthorizationWithOptions:options
-                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                            [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
-    }];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-  } else {
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:nil];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  center.delegate = self;
+  UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+  ${
+    shouldUseProvisionalPush
+      ? `
+      if (@available(iOS 12.0, *)) {
+        options = options | UNAuthorizationOptionProvisional;
+      }
+  `
+      : ''
   }
-`;
 
-// Enable push handling - notification received
-const didReceiveRemoteNotificationBrazeHandler = `
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-  [[Appboy sharedInstance] registerApplication:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
-}`;
+  [center requestAuthorizationWithOptions:options
+                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                          [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+  }];
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+`;
 
 // Enable push handling - notification response
 const didReceiveNotificationResponseBrazeHandler = `
@@ -78,22 +66,43 @@ const willPresentNotificationBrazeHandler = `
   }
 }`;
 
-// Handle push token registration success
-const didRegisterForRemoteNotificationsWithDeviceTokenBrazeHandler = `
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  [[Appboy sharedInstance] registerDeviceToken:deviceToken];
-}`;
-
 const brazeCodeSnippets = [
-  didReceiveRemoteNotificationBrazeHandler,
   didReceiveNotificationResponseBrazeHandler,
   willPresentNotificationBrazeHandler,
-  didRegisterForRemoteNotificationsWithDeviceTokenBrazeHandler,
 ];
 
 const additionalMethodsForPushNotifications = `${brazeCodeSnippets.join(
   '\n',
 )}\n`; // Join w/ newlines and ensure a newline at the end.
+
+const addOrModifyContents = (
+  stringContents: string,
+  methodRegex: RegExp,
+  codeToModify?: string,
+  codeToAdd?: string,
+) => {
+  const match = stringContents.match(methodRegex);
+
+  // If method doesn't exist, add the method before didFinishLaunching:
+  if (!match || match.index === undefined) {
+    stringContents = stringContents.replace(
+      didFinishLaunchingMethodRegex,
+      `${codeToAdd}\n$1`,
+    );
+    return stringContents;
+  }
+
+  // Otherwise, add to the existing method:
+  const endOfMatchIndex = match.index + match[0].length;
+
+  stringContents = [
+    stringContents.slice(0, endOfMatchIndex),
+    codeToModify,
+    stringContents.slice(endOfMatchIndex),
+  ].join('\n');
+
+  return stringContents;
+};
 
 const addImport = (stringContents: string) => {
   const importRegex = /^(#import .*)\n/m;
@@ -118,39 +127,58 @@ const addImport = (stringContents: string) => {
   return stringContents;
 };
 
-const badgeClearingFullCode = `
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-}
-`;
-
 const addBadgeClearing = (stringContents: string) => {
-  const methodRegex =
+  const applicationBecameActiveRegex =
     /(-\s*\(\s*void\s*\)\s*applicationDidBecomeActive\s*:\s*\(\s*UIApplication\s*\*\s*\)\s*application\s*\{)/;
-  const addedCode =
-    '  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;';
 
-  const match = stringContents.match(methodRegex);
-
-  // If method doesn't exist, add the method before didFinishLaunching:
-  if (!match || match.index === undefined) {
-    stringContents = stringContents.replace(
-      didFinishLaunchingMethodRegex,
-      `${badgeClearingFullCode}\n$1`,
-    );
-    return stringContents;
+  const badgeClearingFullCode = `
+  - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
   }
+  `;
+  return addOrModifyContents(
+    stringContents,
+    applicationBecameActiveRegex,
+    '  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;',
+    badgeClearingFullCode,
+  );
+};
 
-  // Otherwise, add to the existing method:
-  const endOfMatchIndex = match.index + match[0].length;
+const addRegisterForRemoteNotificationsWithDeviceToken = (
+  stringContents: string,
+) => {
+  const didRegisterForRemoteNotificationsWithDeviceTokenRegex =
+    /(-\s*\(void\)application:\s*\(UIApplication\s*\*\)application\s*didRegisterForRemoteNotificationsWithDeviceToken:\s*\(NSData\s*\*\)deviceToken\s*\{)/;
 
-  stringContents = [
-    stringContents.slice(0, endOfMatchIndex),
-    addedCode,
-    stringContents.slice(endOfMatchIndex),
-  ].join('\n');
+  // Handle push token registration success
+  const didRegisterForRemoteNotificationsWithDeviceTokenBrazeHandlerFullCode = `
+  - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[Appboy sharedInstance] registerDeviceToken:deviceToken];
+  }`;
 
-  return stringContents;
+  return addOrModifyContents(
+    stringContents,
+    didRegisterForRemoteNotificationsWithDeviceTokenRegex,
+    '  [[Appboy sharedInstance] registerDeviceToken:deviceToken];',
+    didRegisterForRemoteNotificationsWithDeviceTokenBrazeHandlerFullCode,
+  );
+};
+
+const addReceiveRemoteNotificationHandler = (stringContents: string) => {
+  const didReceiveRemoteNotificationRegex =
+    /(-\s*\(void\)application:\(UIApplication\s*\*\)application\s*didReceiveRemoteNotification:\(NSDictionary\s*\*)userInfo\s*fetchCompletionHandler:\(void\s*\(\^\)\(UIBackgroundFetchResult\)\)completionHandler\s*\{)/;
+
+  const didReceiveRemoteNotificationBrazeHandlerFullCode = `
+  - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [[Appboy sharedInstance] registerApplication:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+  }`;
+
+  return addOrModifyContents(
+    stringContents,
+    didReceiveRemoteNotificationRegex,
+    '  [[Appboy sharedInstance] registerApplication:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];',
+    didReceiveRemoteNotificationBrazeHandlerFullCode,
+  );
 };
 
 export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
@@ -164,6 +192,9 @@ export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
 
     stringContents = addImport(stringContents);
     stringContents = addBadgeClearing(stringContents);
+    stringContents =
+      addRegisterForRemoteNotificationsWithDeviceToken(stringContents);
+    stringContents = addReceiveRemoteNotificationHandler(stringContents);
 
     const configureBrazeSDK = configureBrazeSDKGenerator({ iosSdkApiKey });
 
