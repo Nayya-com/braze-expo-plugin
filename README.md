@@ -7,22 +7,27 @@ Currently, the Braze React Native SDK does not support the Expo managed workflow
 Appboy/appboy-react-sdk#119 is tracking progress on a comprehensive config plugin.
 
 ### Disclaimer
+
 This plugin may or may not meet the needs of your Expo app, and it should not be considered stable or production ready.
 
 It is subject to breaking changes until we reach `v1.0.0`.
 
 It has only been tested with:
- - Expo SDK versions 44 and 45
- - Using `eas build` with EAS managed credentials
- - A limited set of Android and iOS versions
+
+- Expo SDK versions 44, 45, and 46
+- Using `eas build` with EAS managed credentials
+- A limited set of Android and iOS versions
 
 ## Installation
+
 ```
 yarn add @nayya/braze-expo-plugin
 ```
 
 ## Setup
+
 Add the plugin and its props to your `app.config.js`:
+
 ```javascript
 // Required props:
 const androidSdkApiKey = process.env.BRAZE_SDK_API_KEY_ANDROID;
@@ -73,7 +78,7 @@ export default {
           notificationIconBackgroundColor,
           shouldUseProvisionalPush,
           smallNotificationIcon,
-        }
+        },
       ],
     ],
   },
@@ -85,6 +90,7 @@ For local builds, define these vars in your local environment before building (c
 For EAS builds, [add them as secrets on the Expo website](https://docs.expo.dev/build-reference/variables/#secrets-on-the-expo-website) and then run the `eas build` command.
 
 ## TODO
+
 - Ingest `deploymentTarget` from `expo-build-properties` config plugin if it's in use.
 - Add tests
   - Unit tests for helpers

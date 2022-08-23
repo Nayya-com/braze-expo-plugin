@@ -166,7 +166,7 @@ const addRegisterForRemoteNotificationsWithDeviceToken = (
 
 const addReceiveRemoteNotificationHandler = (stringContents: string) => {
   const didReceiveRemoteNotificationRegex =
-    /(-\s*\(void\)application:\(UIApplication\s*\*\)application\s*didReceiveRemoteNotification:\(NSDictionary\s*\*)userInfo\s*fetchCompletionHandler:\(void\s*\(\^\)\(UIBackgroundFetchResult\)\)completionHandler\s*\{)/;
+    /(-\s*\(void\)application:\(UIApplication\s*\*\)application\s*didReceiveRemoteNotification:\(NSDictionary\s*\*\)userInfo\s*fetchCompletionHandler:\(void\s*\(\^\)\(UIBackgroundFetchResult\)\)completionHandler\s*\{)/;
 
   const didReceiveRemoteNotificationBrazeHandlerFullCode = `
   - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
