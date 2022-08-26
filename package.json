@@ -39,6 +39,7 @@
     "xcode": "^3.0.1"
   },
   "dependencies": {
-    "@expo/image-utils": "^0.3.22"
+    "@expo/image-utils": "^0.3.22",
+    "fs": "^0.0.1-security"
   }
 }

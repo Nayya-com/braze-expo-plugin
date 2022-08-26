@@ -30,24 +30,30 @@ const registerForPushNotificationsAndSetCenterDelegateBraze = ({
 }: {
   shouldUseProvisionalPush: boolean;
 }) => `
-  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  center.delegate = self;
-  UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-  ${
-    shouldUseProvisionalPush
-      ? `
-      if (@available(iOS 12.0, *)) {
-        options = options | UNAuthorizationOptionProvisional;
-      }
-  `
-      : ''
-  }
+  if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
+    UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+    ${
+      shouldUseProvisionalPush
+        ? `
+        if (@available(iOS 12.0, *)) {
+          options = options | UNAuthorizationOptionProvisional;
+        }
+        `
+        : ''
+    }
 
-  [center requestAuthorizationWithOptions:options
-                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                          [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
-  }];
-  [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [center requestAuthorizationWithOptions:options
+                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                            [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+    }];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+  } else {
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:nil];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+  }
 `;
 
 // Enable push handling - notification response
@@ -77,11 +83,11 @@ const additionalMethodsForPushNotifications = `${brazeCodeSnippets.join(
 
 const addOrModifyContents = (
   stringContents: string,
-  methodRegex: RegExp,
+  regex: RegExp,
   codeToModify?: string,
   codeToAdd?: string,
 ) => {
-  const match = stringContents.match(methodRegex);
+  const match = stringContents.match(regex);
 
   // If method doesn't exist, add the method before didFinishLaunching:
   if (!match || match.index === undefined) {
@@ -104,9 +110,8 @@ const addOrModifyContents = (
   return stringContents;
 };
 
-const addImport = (stringContents: string) => {
+const addImport = (stringContents: string, importToAdd: string) => {
   const importRegex = /^(#import .*)\n/m;
-  const addedImport = '#import "Appboy-iOS-SDK/AppboyKit.h"';
 
   const match = stringContents.match(importRegex);
   let endOfMatchIndex: number;
@@ -120,7 +125,7 @@ const addImport = (stringContents: string) => {
 
   stringContents = [
     stringContents.slice(0, endOfMatchIndex),
-    addedImport,
+    importToAdd,
     stringContents.slice(endOfMatchIndex),
   ].join('\n');
 
@@ -166,7 +171,7 @@ const addRegisterForRemoteNotificationsWithDeviceToken = (
 
 const addReceiveRemoteNotificationHandler = (stringContents: string) => {
   const didReceiveRemoteNotificationRegex =
-    /(-\s*\(void\)application:\(UIApplication\s*\*\)application\s*didReceiveRemoteNotification:\(NSDictionary\s*\*\)userInfo\s*fetchCompletionHandler:\(void\s*\(\^\)\(UIBackgroundFetchResult\)\)completionHandler\s*\{)/;
+    /(-\s*\(void\)application:\s*\(UIApplication\s*\*\)application\s*didReceiveRemoteNotification:\(NSDictionary\s*\*\)userInfo\s*fetchCompletionHandler:\(void\s*\(\^\)\(UIBackgroundFetchResult\)\)completionHandler\s*\{)/;
 
   const didReceiveRemoteNotificationBrazeHandlerFullCode = `
   - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
@@ -190,7 +195,10 @@ export const withAppDelegateModifications: ConfigPlugin<ConfigProps> = (
   return withAppDelegate(configOuter, (config) => {
     let stringContents = config.modResults.contents;
 
-    stringContents = addImport(stringContents);
+    stringContents = addImport(
+      stringContents,
+      '#import "Appboy-iOS-SDK/AppboyKit.h"',
+    );
     stringContents = addBadgeClearing(stringContents);
     stringContents =
       addRegisterForRemoteNotificationsWithDeviceToken(stringContents);
