@@ -7,7 +7,13 @@ import { withAddedPermissions } from './android/withAddedPermissions';
 import { withBrazeXmlBaseMod, withBrazeXml } from './android/withBrazeXml';
 import { withMainActivityModifications } from './android/withMainActivityModifications';
 import { withMainApplicationModifications } from './android/withMainApplicationModifications';
+
 import { guardProps, guardConfig } from './helpers/guards';
+
+import {
+  withAppDelegateHeaderBaseMod,
+  withSimpleAppDelegateHeaderMod,
+} from './ios/withAppDelegateHeaderBaseMod';
 import { withAppDelegateModifications } from './ios/withAppDelegateModifications';
 import { withAppGroupPermissions } from './ios/withAppGroupPermissions';
 import { withApsEnvironment } from './ios/withApsEnvironment';
@@ -25,6 +31,7 @@ const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
     withAddedMavenRepository,
     withAddedMessagingService,
     withAddedPermissions,
+    withSimpleAppDelegateHeaderMod,
     withAppDelegateModifications,
     withAppGroupPermissions,
     withApsEnvironment,
@@ -38,6 +45,7 @@ const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
 
     // Base mods MUST be last (see https://docs.expo.dev/guides/config-plugins/)
     withBrazeXmlBaseMod,
+    withAppDelegateHeaderBaseMod,
   ] as ConfigPlugin<ConfigProps>[]; // Type coercion so that TypeScript doesn't complain about the extra `props` param some some values of `fn` below
 
   // Apply all of the functions to config, in order:
