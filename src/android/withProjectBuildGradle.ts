@@ -5,10 +5,6 @@ import {
   removeGeneratedContents,
 } from '@expo/config-plugins/build/utils/generateCode';
 import { ExpoConfig } from '@expo/config-types';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-const PROJECT_LEVEL_GRADLE = 'braze-project-level-build-extras.gradle';
 
 const appendContents = ({
   src,
