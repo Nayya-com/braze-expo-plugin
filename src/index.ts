@@ -1,15 +1,13 @@
 import { ConfigPlugin } from '@expo/config-plugins';
 
 import { withAddedFirebaseMessagingDependency } from './android/withAddedFirebaseMessagingDependency';
-import { withAddedMavenRepository } from './android/withAddedMavenRepository';
 import { withAddedMessagingService } from './android/withAddedMessagingService';
 import { withAddedPermissions } from './android/withAddedPermissions';
 import { withBrazeXmlBaseMod, withBrazeXml } from './android/withBrazeXml';
 import { withMainActivityModifications } from './android/withMainActivityModifications';
 import { withMainApplicationModifications } from './android/withMainApplicationModifications';
-
+import { withProjectLevelGradle } from './android/withProjectBuildGradle';
 import { guardProps, guardConfig } from './helpers/guards';
-
 import {
   withAppDelegateHeaderBaseMod,
   withSimpleAppDelegateHeaderMod,
@@ -28,7 +26,7 @@ const modifyConfig: ConfigPlugin<ConfigProps> = (config, propsProvided) => {
 
   const fns = [
     withAddedFirebaseMessagingDependency,
-    withAddedMavenRepository,
+    withProjectLevelGradle,
     withAddedMessagingService,
     withAddedPermissions,
     withSimpleAppDelegateHeaderMod,
