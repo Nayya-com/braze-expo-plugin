@@ -80,8 +80,15 @@ const modifyAppDelegateInterface = (
   regex: RegExp,
   codeToModify?: string,
 ) => {
-  const match = stringContents.match(regex);
+  stringContents = stringContents.replace(regex, `$1${codeToModify}$3`);
 
+  return stringContents;
+};
+
+const addImport = (stringContents: string, importToAdd: string) => {
+  const importRegex = /^(#import .*)\n/m;
+
+  const match = stringContents.match(importRegex);
   let endOfMatchIndex: number;
   if (!match || match.index === undefined) {
     // No imports found, just add to start of file:
@@ -90,14 +97,6 @@ const modifyAppDelegateInterface = (
     // Add after first import:
     endOfMatchIndex = match.index + match[0].length;
   }
-
-  stringContents = stringContents.replace(regex, `$1${codeToModify}$3`);
-
-  return stringContents;
-};
-
-const addImport = (stringContents: string, importToAdd: string) => {
-  let endOfMatchIndex = 0;
 
   stringContents = [
     stringContents.slice(0, endOfMatchIndex),
